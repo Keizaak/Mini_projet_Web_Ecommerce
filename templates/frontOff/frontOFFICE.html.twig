@@ -1,0 +1,165 @@
+{% extends "base.html.twig" %}
+{% set total = 0 %}
+{% for p in panier %}
+	{% set total = total +p.produit.prix * p.quantite %}
+{% endfor %}
+
+{% block body %}
+
+	<h1> Projet 2 web : site de vente Espace client </h1>
+
+	<div class="container my-5">
+		<div class="row">
+			<div class="col-12 col-md-6">
+				<table class="table table-bordered">
+					<caption>Produits</caption>
+					<thead>
+					<tr>
+						<th>nom</th>
+						<th>stock</th>
+						<th>prix</th>
+						<th>photo</th>
+						<th>Ajouter</th>
+					</tr>
+					</thead>
+					<tbody>
+                    {% for produit in produits %}
+						<tr>
+							<td>{{ produit.nom }}</td>
+							<td>
+                                {% if produit.disponible %}
+                                    {{ produit.stock }}
+                                {% else %}
+									rupture de stock
+                                {% endif %}
+							</td>
+							<td>{{ produit.prix }}</td>
+							<td>
+								<img src="/images/{{ produit.photo }}" width="50px" alt="{{ produit.nom }}">
+							</td>
+							<td>
+                                {% if produit.disponible %}
+									<form action="{{ path('panier.addProduit') }}" method="post">
+										<input type="hidden" name="id_produit" value="{{ produit.id }}">
+										<button class="btn btn-primary" type="submit">Ajouter</button>
+									</form>
+                                {% else %}
+									bientôt
+                                {% endif %}
+							</td>
+						</tr>
+                    {% endfor %}
+					</tbody>
+				</table>
+			</div>
+			<div class="col-12 col-md-6">
+				<table class="table table-bordered">
+					<caption>
+						Panier
+						{% if total != 0 %}
+							{{ total }}
+						{% endif %}
+					</caption>
+					<thead>
+					<tr>
+						<th>Nom du Produit</th>
+						<th>quantite</th>
+						<th>prix</th>
+						<th>prix total</th>
+						<th>Photo</th>
+						<th>Quantité</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% set total = 0 %}
+                    {% for row in panier %}
+						<tr>
+							<td>
+                                {{ row.produit.nom }}
+							</td>
+							<td>
+                                {{ row.quantite }}
+							</td>
+							<td>
+                                {{ row.produit.prix }}
+							</td>
+							<td>
+                                {{ row.produit.prix * row.quantite }}
+							</td>
+							<td>
+								<img src="/images/{{ row.produit.photo }}" width="50px" alt="{{ row.produit.nom }}">
+							</td>
+							<td>
+                                {% if row.quantite > 1 %}
+									<form action="{{ path('panier.addProduit') }}" method="post" class="d-inline">
+										<input type="hidden" name="id_produit" value="{{ row.produit.id }}">
+										<button class="badge badge-primary border-0 badge-action mx-1 text-center" type="submit">+</button>
+									</form>
+									<form action="{{ path('panier.deleteProduit') }}" method="post"class="d-inline">
+										<input type="hidden" name="id_panier" value="{{ row.id }}">
+										<button class="badge badge-primary border-0  badge-action mx-1 text-center" type="submit">-</button>
+									</form>
+                                {% else %}
+									<form action="{{ path('panier.deleteProduit') }}" method="post">
+										<input type="hidden" name="id_panier" value="{{ row.id }}">
+										<button class="btn btn-primary" type="submit">Supprimer</button>
+									</form>
+                                {% endif %}
+							</td>
+
+						</tr>
+                    {% endfor %}
+
+					</tbody>
+				</table>
+				<a href="{{ path("client.commandeCreate") }}">
+					<button>Valider</button>
+				</a>
+			</div>
+
+		</div>
+	</div>
+	{% if commande is defined %}
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+			Launch demo modal
+		</button>
+
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						...
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Save changes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    $(window).load(function(){
+        ('#myModal').modal('show');
+    });
+</script>
+{% endblock %}
+
+
+
+
+
+
+

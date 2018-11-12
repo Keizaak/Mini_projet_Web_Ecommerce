@@ -1,0 +1,70 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+{% set total = 0 %}
+{% for p in panier %}
+	{% set total = total +p.produit.prix * p.quantite %}
+{% endfor %}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12 col-md-10 mx-auto">
+			<div class="card">
+			    <div class="card-header">
+			        Client n°{{ client.id }}
+			    </div>
+			    <div class="card-body">
+					{% if panier != null %}
+						<table class="table table-bordered">
+							<caption>Total {{ total }}€</caption>
+							<thead>
+							<tr>
+								<th>Nom du Produit</th>
+								<th>quantite</th>
+								<th>prix</th>
+								<th>prix total</th>
+								<th>Photo</th>
+							</tr>
+							</thead>
+							<tbody>
+                            {% set total = 0 %}
+                            {% for row in panier %}
+								<tr>
+									<td>
+                                        {{ row.produit.nom }}
+									</td>
+									<td>
+                                        {{ row.quantite }}
+									</td>
+									<td>
+                                        {{ row.produit.prix }}
+									</td>
+									<td>
+                                        {{ row.produit.prix * row.quantite }}
+									</td>
+									<td>
+										<img src="/images/{{ row.produit.photo }}" width="50px" alt="{{ row.produit.nom }}">
+									</td>
+								</tr>
+                            {% endfor %}
+
+							</tbody>
+						</table>
+					{% else %}
+						Pas de panier pour ce client
+					{% endif %}
+			    </div>
+			 </div>
+        </div>
+    </div>
+ </div>
+
+{% endblock %}
+
+
+
+
+
+
+

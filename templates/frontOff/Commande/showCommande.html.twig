@@ -1,0 +1,75 @@
+{% extends "base.html.twig" %}
+{% set total_commande = 0 %}
+{% for l in lignes %}
+	{% set total_commande = total_commande +l.produit.prix * l.quantite %}
+{% endfor %}
+
+{% block body %}
+
+	<h1> Projet 2 web : site de vente Espace client </h1>
+
+	<div class="container my-5">
+		<div class="row">
+			<div class="col-12 col-md-10 mx-auto">
+				<table class="table table-bordered table-hover ">
+					<thead>
+					<tr>
+						<th>Nom du Produit</th>
+						<th>Quantité</th>
+						<th>Prix</th>
+						<th>Photo</th>
+						<th>Total</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% set total = 0 %}
+                    {% for row in lignes %}
+						<tr>
+							<td>
+                                {{ row.produit.nom }}
+							</td>
+							<td>
+                                {{ row.quantite }}
+							</td>
+							<td>
+                                {{ row.produit.prix }}€
+							</td>
+							<td>
+								<img src="/images/{{ row.produit.photo }}" width="50px" alt="{{ row.produit.nom }}">
+							</td>
+							<td>
+                                {{ row.produit.prix * row.quantite }}€
+							</td>
+						</tr>
+                    {% endfor %}
+					<tr>
+						<td colspan="4"></td>
+						<td><strong>{{ total_commande }} €</strong></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 col-md-10 mx-auto">
+				<a href="{{ path("client.commandeDeleteCreee") }}">
+					Modifer
+				</a>
+				<a href="{{ path("client.commandeValider") }}">
+					Commander
+				</a>
+				<a href="{{ path("client.viderPanierCommande") }}">
+					Vider
+				</a>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+
+
+
+
+
+
